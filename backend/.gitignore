@@ -3,4 +3,6 @@
 
 node_modules
 
+./database_development.sqlite
+
 database_development.sqlite
