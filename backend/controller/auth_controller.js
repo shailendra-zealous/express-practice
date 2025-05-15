@@ -1,10 +1,12 @@
 const auth_controller = {}
 
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 const db = require("../models")
 
 const { successResponse, errorResponse } = require("../helper/response")
 const { formatJoiErrors } = require("../helper/format_validation_error")
-const { registerSchema } = require("../validation_schema/register")
+const { registerSchema } = require("../validation_schema/register_validation")
 
 auth_controller.register = async (req, res) => {
     const { error } = registerSchema.validate(req.body, { abortEarly: false })
@@ -20,7 +22,27 @@ auth_controller.register = async (req, res) => {
         });
         return errorResponse(res, formattedErrors, 422)
     }
-    return successResponse(res, null, "User registered successfully")
+
+    const { firstname, lastname, email, password } = req.body
+
+    const defaultSalt = +process.env.JWT_SALT || 10
+    const salt = await bcrypt.genSalt(defaultSalt)
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    const newUser = await db.User.create({
+        first_name: firstname,
+        last_name: lastname,
+        email,
+        password: hashedPassword
+    })
+
+    if (!newUser) {
+        return errorResponse(res, "User registration failed", 500)
+    }
+
+    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: "1h" })
+
+    return successResponse(res, { token }, "User registered successfully")
 }
 
 auth_controller.login = async (req, res) => {
