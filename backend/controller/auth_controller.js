@@ -9,10 +9,10 @@ const { formatJoiErrors } = require("../helper/format_validation_error")
 const { registerSchema } = require("../validation_schema/register_validation")
 
 auth_controller.register = async (req, res) => {
+
     const { error } = registerSchema.validate(req.body, { abortEarly: false })
 
     if (error && error.details && Array.isArray(error.details) && error.details.length > 0) {
-
         const formattedErrors = formatJoiErrors(error.details, {
             email: 'Email Address',
             password: 'Password'
@@ -21,6 +21,11 @@ auth_controller.register = async (req, res) => {
             "password.string.pattern.base": "Password must be alphanumeric and between 8 to 30 characters"
         });
         return errorResponse(res, formattedErrors, 422)
+    }
+
+    const existingUser = await db.User.findOne({ where: { email: req.body.email } })
+    if (existingUser) {
+        return errorResponse(res, { email: "Email already exists" }, 422)
     }
 
     const { firstname, lastname, email, password } = req.body
