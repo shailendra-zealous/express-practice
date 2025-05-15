@@ -7,7 +7,6 @@ const googleStrategy = () => {
     },
         async (accessToken, refreshToken, profile, done) => {
             try {
-                console.log(profile)
                 const user = {
                     googleId: profile.id,
                     displayName: profile.displayName,
