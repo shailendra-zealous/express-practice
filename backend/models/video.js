@@ -4,7 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         tableName: 'videos',
         timestamps: true,
-        paranoid: true
+        paranoid: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
+        deletedAt: 'deleted_at'
     });
 
     Video.associate = models => {

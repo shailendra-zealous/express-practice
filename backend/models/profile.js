@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         tableName: 'profiles',
         timestamps: true,
-        paranoid: true
+        paranoid: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
+        deletedAt: 'deleted_at'
     });
 
     Profile.associate = models => {
