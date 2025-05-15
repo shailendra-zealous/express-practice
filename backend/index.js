@@ -3,11 +3,17 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
+const passport = require('passport');
+const googleStrategy = require('./helper/google_strategy');
+
 const auth_routes = require('./routes/auth_routes')
 
 require('dotenv').config()
 
 app.use(express.json());
+app.use(passport.initialize());
+passport.use(googleStrategy());
+
 app.use(auth_routes);
 
 http.createServer(app).listen(port, () => {
