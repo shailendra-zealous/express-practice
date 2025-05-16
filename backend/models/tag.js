@@ -10,14 +10,5 @@ module.exports = (sequelize, DataTypes) => {
         deletedAt: 'deleted_at'
     });
 
-    Tag.associate = models => {
-        Tag.belongsToMany(models.Post, {
-            through: models.PostTag,
-            foreignKey: 'tag_id'
-        });
-
-        Tag.hasMany(models.Taggable, { foreignKey: 'tag_id' });
-    };
-
     return Tag;
 };

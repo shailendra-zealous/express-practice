@@ -10,15 +10,5 @@ module.exports = (sequelize, DataTypes) => {
         deletedAt: 'deleted_at'
     });
 
-    Video.associate = models => {
-        Video.hasMany(models.Taggable, {
-            foreignKey: 'taggable_id',
-            constraints: false,
-            scope: {
-                taggable_type: 'videos'
-            }
-        });
-    };
-
     return Video;
 };

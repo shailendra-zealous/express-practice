@@ -1,4 +1,3 @@
-
 module.exports = (sequelize, DataTypes) => {
     const Taggable = sequelize.define('Taggable', {
         tag_id: DataTypes.INTEGER,
@@ -6,18 +5,8 @@ module.exports = (sequelize, DataTypes) => {
         taggable_type: DataTypes.STRING
     }, {
         tableName: 'taggables',
-        timestamps: true,
-        paranoid: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-        deletedAt: 'deleted_at'
+        timestamps: false,
     });
-
-    Taggable.associate = models => {
-        Taggable.belongsTo(models.Tag, { foreignKey: 'tag_id' });
-
-        // Optional: define polymorphic association manually in business logic
-    };
 
     return Taggable;
 };

@@ -15,9 +15,5 @@ module.exports = (sequelize, DataTypes) => {
         deletedAt: 'deleted_at'
     });
 
-    Profile.associate = models => {
-        Profile.belongsTo(models.User, { foreignKey: 'user_id' });
-    };
-
     return Profile;
 };
