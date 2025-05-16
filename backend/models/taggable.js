@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         tableName: 'taggables',
         timestamps: false,
+        id: false,
     });
 
+    Taggable.removeAttribute('id');
+    
     return Taggable;
 };

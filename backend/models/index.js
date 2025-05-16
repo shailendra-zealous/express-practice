@@ -80,30 +80,57 @@ db.Tag.belongsToMany(db.Post, {
   through: db.PostTag,
   foreignKey: 'tag_id'
 });
-db.Tag.hasMany(db.Taggable, { foreignKey: 'tag_id' });
 
-db.Video.hasMany(db.Taggable, {
-  foreignKey: 'taggable_id',
-  constraints: false,
+db.Tag.belongsToMany(db.User, {
+  through: {
+    model: db.Taggable,
+    unique: false,
+    scope: {
+      taggable_type: 'user'
+    }
+  },
+  foreignKey: 'tag_id',
+  otherKey: 'taggable_id',
+  as: 'users'
+})
+
+db.Tag.belongsToMany(db.Video, {
+  through: {
+    model: db.Taggable,
+    unique: false,
   scope: {
-    taggable_type: 'videos'
+      taggable_type: 'video'
   }
+  },
+  foreignKey: 'tag_id',
+  otherKey: 'taggable_id',
+  as: 'videos'
 });
 
-db.Taggable.belongsTo(db.Tag, { foreignKey: 'tag_id' });
-db.Taggable.belongsTo(db.Video, {
+db.User.belongsToMany(db.Tag, {
+  through: {
+    model: db.Taggable,
+    unique: false,
+    scope: {
+      taggable_type: 'user'
+    }
+  },
   foreignKey: 'taggable_id',
-  constraints: false,
-  scope: {
-    taggable_type: 'videos'
-  }
+  otherKey: 'tag_id',
+  as: 'tags'
 });
-db.Taggable.belongsTo(db.Post, {
+
+db.Video.belongsToMany(db.Tag, {
+  through: {
+    model: db.Taggable,
+    unique: false,
+  scope: {
+      taggable_type: 'video'
+  }
+  },
   foreignKey: 'taggable_id',
-  constraints: false,
-  scope: {
-    taggable_type: 'posts'
-  }
-});
+  otherKey: 'tag_id',
+  as: 'tags'
+})
 
 module.exports = db;

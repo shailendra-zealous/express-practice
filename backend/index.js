@@ -17,5 +17,6 @@ passport.use(googleStrategy());
 app.use(auth_routes);
 
 http.createServer(app).listen(port, () => {
+    console.clear()
     console.log('Server is running on port ' + port);
 })
