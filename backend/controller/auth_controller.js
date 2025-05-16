@@ -1,6 +1,5 @@
 const auth_controller = {}
 
-const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const db = require("../models")
 
@@ -9,6 +8,7 @@ const { formatJoiErrors } = require("../helper/format_validation_error")
 const { registerValidation } = require("../validation_schema/register_validation")
 const { loginValidation } = require("../validation_schema/login_validation")
 const { generateAccessToken, generateRefreshToken } = require("../helper/token")
+const { hashedPassword } = require("../helper/hashed_password")
 
 auth_controller.register = async (req, res) => {
 
@@ -34,9 +34,7 @@ auth_controller.register = async (req, res) => {
 
     const { name, lastname, email, password } = req.body
 
-    const defaultSalt = +process.env.JWT_SALT || 10
-    const salt = await bcrypt.genSalt(defaultSalt)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    const hashedPassword = await hashedPassword(password)
 
     const newUser = await db.User.create({
         name,
