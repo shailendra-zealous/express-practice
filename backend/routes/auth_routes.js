@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { OAuth2Client } = require('google-auth-library');
+const { OAuth2Client, auth } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const { errorResponse, successResponse } = require("../helper/response")
@@ -12,6 +12,8 @@ router.post("/login", auth_controller.login)
 
 router.post("/register", auth_controller.register)
 
+router.post('/token', auth_controller.token)
+
 router.get('/user', verifyToken, auth_controller.getUser)
 
 router.get('/auth/google',
@@ -21,7 +23,6 @@ router.get('/auth/google',
     })
     // https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email  redirect to this URL
 );
-
 
 router.get('/auth/google/callback', (req, res, next) => {
     passport.authenticate('google', { session: false }, (err, user, info) => {
