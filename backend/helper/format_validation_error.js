@@ -4,10 +4,19 @@ const formatJoiErrors = (errors, attributeNames, customMessages) => {
 
     errors.forEach(error => {
         const field = error.path.join('.');
-        const friendlyName = attributeNames[field] || field;
+
+        let friendlyName = field;
+        if (attributeNames && attributeNames[field]) {
+            friendlyName = attributeNames[field];
+        }
+
         const message = error.message.replace(`"${field}"`, `${friendlyName}`);
         const customMessageField = field + "." + error.type;
-        const customMessage = customMessages[customMessageField] || message;
+
+        let customMessage = message;
+        if (customMessages && customMessages[customMessageField]) {
+            customMessage = customMessages[customMessageField];
+        }
 
         if (!formattedErrors[field]) {
             formattedErrors[field] = [];

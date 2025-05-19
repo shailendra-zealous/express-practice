@@ -14,8 +14,6 @@ router.post("/register", auth_controller.register)
 
 router.post('/token', auth_controller.token)
 
-router.get('/user', verifyToken, auth_controller.getUser)
-
 router.get('/auth/google',
     passport.authenticate('google', {
         scope: ['profile', 'email'],
@@ -73,5 +71,12 @@ router.post('/auth/google-token', async (req, res) => {
         return res.status(401).json({ success: false, message: 'Invalid token', error });
     }
 });
+
+router.get("/users/:user/post/:post", (req, res, next) => {
+    const { user, post } = req.params;
+    console.log(Object.keys(req.params), "here")
+    // console.log(req.params, "here")
+    next()
+}, auth_controller.test)
 
 module.exports = router;

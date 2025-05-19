@@ -8,7 +8,6 @@ const { formatJoiErrors } = require("../helper/format_validation_error")
 const { registerValidation } = require("../validation_schema/register_validation")
 const { loginValidation } = require("../validation_schema/login_validation")
 const { generateAccessToken, generateRefreshToken } = require("../helper/token")
-const { hashedPassword } = require("../helper/hashed_password")
 
 auth_controller.register = async (req, res) => {
 
@@ -32,7 +31,7 @@ auth_controller.register = async (req, res) => {
         return errorResponse(res, { email: "Email already exists" }, 422)
     }
 
-    const { name, lastname, email, password } = req.body
+    const { name, email, password } = req.body
 
     const hashedPassword = await hashedPassword(password)
 
@@ -99,5 +98,55 @@ auth_controller.token = async (req, res) => {
     });
 }
 
+auth_controller.test = async (req, res) => {
+
+    return successResponse(res, req.params, "Test successful")
+
+    const user = await db.User.findAll({
+        include: [
+            {
+                model: db.Profile,
+                attributes: ["bio"],
+            },
+            {
+                model: db.Post
+            }
+        ]
+    })
+
+    const post = await db.Post.findAll({
+        include: [
+            {
+                model: db.User,
+                attributes: ["name", "email"],
+            },
+            {
+                model: db.Tag,
+                attributes: ["name"]
+            }
+        ]
+    })
+
+    const tag = await db.Tag.findAll({
+        include: [
+            // {
+            //     model: db.Post,
+            //     attributes: ["title"],
+            // },
+            {
+                model: db.User,
+                as: 'users',
+                attributes: ["name", "email"],
+            },
+            {
+                model: db.Video,
+                as: "videos",
+                attributes: ["title"],
+            },
+        ]
+    })
+
+    return successResponse(res, tag, "Test successful")
+}
 
 module.exports = auth_controller
