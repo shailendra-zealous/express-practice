@@ -8,6 +8,7 @@ const googleStrategy = require('./helper/google_strategy');
 
 const auth_routes = require('./routes/auth_routes')
 const user_routes = require('./routes/user_routes')
+const post_routes = require("./routes/post_routes")
 
 require('dotenv').config()
 
@@ -17,6 +18,7 @@ passport.use(googleStrategy());
 
 app.use(auth_routes);
 app.use(user_routes);
+app.use(post_routes);
 
 http.createServer(app).listen(port, () => {
     console.clear()
