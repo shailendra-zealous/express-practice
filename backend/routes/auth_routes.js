@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const { OAuth2Client, auth } = require('google-auth-library');
+const { OAuth2Client, } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const { errorResponse, successResponse } = require("../helper/response")
 const auth_controller = require("../controller/auth_controller")
-const verifyToken = require("../middleware/verifyToken");
 
 router.post("/login", auth_controller.login)
 
@@ -37,7 +36,6 @@ router.get('/auth/google/callback', (req, res, next) => {
     })(req, res, next);
 });
 
-// This needs testing
 router.post('/auth/google-token', async (req, res) => {
     const { id_token } = req.body;
 
@@ -72,11 +70,6 @@ router.post('/auth/google-token', async (req, res) => {
     }
 });
 
-router.get("/users/:user/post/:post", (req, res, next) => {
-    const { user, post } = req.params;
-    console.log(Object.keys(req.params), "here")
-    // console.log(req.params, "here")
-    next()
-}, auth_controller.test)
+router.get("/test", auth_controller.test)
 
 module.exports = router;
