@@ -11,6 +11,10 @@ router.param("post", postController.bindPost);
 router.post("/create-post", postController.createPost);
 
 router.get("/posts", postController.postListing);
-router.get("/post/:post", postController.viewPost);
+
+router.route("/post/:post")
+    .get(postController.viewPost)
+    .put(postController.updatePost)
+    .delete(postController.deletePost);
 
 module.exports = router;
