@@ -45,8 +45,8 @@ auth_controller.register = async (req, res) => {
         return errorResponse(res, "User registration failed", 500)
     }
 
-    const accessToken = generateAccessToken({ id: newUser.id });
-    const refreshToken = generateRefreshToken({ id: newUser.id });
+    const accessToken = generateAccessToken(newUser.id);
+    const refreshToken = generateRefreshToken(newUser.id);
 
     return successResponse(res, { accessToken, refreshToken }, "User registered successfully")
 }
@@ -69,8 +69,8 @@ auth_controller.login = async (req, res) => {
         return errorResponse(res, { email: "Email not found" }, 422)
     }
 
-    const accessToken = generateAccessToken({ id: existingUser.id });
-    const refreshToken = generateRefreshToken({ id: existingUser.id });
+    const accessToken = generateAccessToken(existingUser.id);
+    const refreshToken = generateRefreshToken(existingUser.id);
 
     return successResponse(res, { accessToken, refreshToken }, "User registered successfully")
 
@@ -93,7 +93,7 @@ auth_controller.token = async (req, res) => {
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return errorResponse(res, "Invalid refresh token", 403);
 
-        const newAccessToken = generateAccessToken({ user: user.id });
+        const newAccessToken = generateAccessToken(user.id);
         return successResponse(res, { accessToken: newAccessToken }, "New access token generated successfully")
     });
 }
