@@ -124,6 +124,9 @@ postController.updatePost = async (req, res) => {
 }
 
 postController.deletePost = async (req, res) => {
+    if (req.post.user_id != req.user.id) {
+        return errorResponse(res, "You are not authorized to delete this post", 403)
+    }
     await req.post.destroy();
     return successResponse(res, {}, "Post deleted successfully")
 }
