@@ -13,6 +13,8 @@ const post_routes = require("./routes/post_routes")
 require('dotenv').config()
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.use(passport.initialize());
 passport.use(googleStrategy());
 

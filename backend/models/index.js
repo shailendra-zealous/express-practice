@@ -17,7 +17,8 @@ if (config.use_env_variable) {
   sequelize = new Sequelize({
     dialect: config.dialect,
     storage: config.storage,
-    logging: config.logging || false // Optional: disable logging for cleaner output
+    // logging: config.logging || false // Optional: disable logging for cleaner output
+    logging: console.log
   });
 }
 
@@ -63,6 +64,7 @@ db.Tag = require('./tag')(sequelize, Sequelize.DataTypes);
 db.PostTag = require('./posttag')(sequelize, Sequelize.DataTypes);
 db.Taggable = require('./taggable')(sequelize, Sequelize.DataTypes);
 db.Video = require('./video')(sequelize, Sequelize.DataTypes);
+db.Image = require('./image')(sequelize, Sequelize.DataTypes);
 
 
 db.User.hasOne(db.Profile, { foreignKey: 'user_id' });
@@ -131,6 +133,42 @@ db.Video.belongsToMany(db.Tag, {
   foreignKey: 'taggable_id',
   otherKey: 'tag_id',
   as: 'tags'
+})
+
+db.User.hasOne(db.Image, {
+  foreignKey: "imageableId",
+  constraints: false,
+  scope: {
+    imageableType: 'user'
+  },
+  as: 'image'
+})
+
+db.Post.hasMany(db.Image, {
+  foreignKey: "imageableId",
+  constraints: false,
+  scope: {
+    imageableType: 'post'
+  },
+  as: 'images'
+})
+
+db.Image.belongsTo(db.User, {
+  foreignKey: 'imageableId',
+  constraints: false,
+  scope: {
+    imageableType: 'user'
+  },
+  as: 'user'
+})
+
+db.Image.belongsTo(db.Post, {
+  foreignKey: 'imageableId',
+  constraints: false,
+  scope: {
+    imageableType: 'post'
+  },
+  as: 'post'
 })
 
 module.exports = db;
